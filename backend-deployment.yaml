@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: crud-app
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       app: backend 
+  template: 
+    metadata:
+      name: backend 
+      labels:
+        app: backend 
+    spec:
+      restartPolicy: Always
+      containers: 
+       - name: backend
+         image: final_assignment-backend
+         imagePullPolicy: Never
+         ports:
+           - containerPort: 8000
+         env:
+          - name: db_address
+            value: postgres-service
+          - name: db_username
+            value: postgres
+          - name: db_name 
+            value: postgres
+          - name: db_password 
+            valueFrom:
+             secretKeyRef:
+               name: rotc-secret
+               key: db-password
